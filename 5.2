@@ -1,0 +1,56 @@
+import tkinter as tk
+
+class LEDController:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("LED Controller")
+        self.selected_led = tk.IntVar()
+
+        # Create the radio buttons
+        red_led_button = tk.Radiobutton(self.root, text="Red LED", variable=self.selected_led, value=1, command=self.turn_on_led)
+        green_led_button = tk.Radiobutton(self.root, text="Green LED", variable=self.selected_led, value=2, command=self.turn_on_led)
+        blue_led_button = tk.Radiobutton(self.root, text="Blue LED", variable=self.selected_led, value=3, command=self.turn_on_led)
+
+        # Create the exit button
+        exit_button = tk.Button(self.root, text="Exit", command=self.root.quit)
+
+        # Pack the buttons into the window
+        red_led_button.pack()
+        green_led_button.pack()
+        blue_led_button.pack()
+        exit_button.pack()
+
+    def turn_on_led(self):
+        # Get the selected LED and turn it on
+        selected_led = self.selected_led.get()
+        if selected_led == 1:
+            # Turn on the red LED
+            # First, turn off all other LEDs
+            GPIO.output(27, GPIO.LOW)
+            GPIO.output(22, GPIO.LOW)
+            # Then, turn on the red LED
+            GPIO.output(17, GPIO.HIGH)
+        elif selected_led == 2:
+            # Turn on the green LED
+            GPIO.output(17, GPIO.LOW)
+            GPIO.output(22, GPIO.LOW)
+            GPIO.output(27, GPIO.HIGH)
+        elif selected_led == 3:
+            # Turn on the blue LED
+            GPIO.output(17, GPIO.LOW)
+            GPIO.output(27, GPIO.LOW)
+            GPIO.output(22, GPIO.HIGH)
+
+if __name__ == "__main__":
+    # Initialize the GPIO pins
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(17, GPIO.OUT)
+    GPIO.setup(27, GPIO.OUT)
+    GPIO.setup(22, GPIO.OUT)
+
+    # Create the LED controller GUI
+    led_controller = LEDController()
+    led_controller.root.mainloop()
+
+    # Clean up the GPIO pins
+    GPIO.cleanup()
